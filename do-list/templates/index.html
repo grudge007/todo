@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Todo</title>
+</head>
+<body>
+    <section class="todo">
+        <h2>To-do list</h2>
+        <div class="input">
+            <form method="POST" action="{{ url_for('add') }}">
+                <input type="text" class="input-field" name="task" id="todoInput" placeholder="Add a new todo">
+                <select name="status">
+                    <option value="Not Started">Not Started</option>
+                    <option value="Started">Started</option>
+                    <option value="Done">Done</option>
+                </select>
+                <button class="btn">Add</button>
+            </form>
+        </div><br>
+        <ul class="scroll">
+            {% for todo in todos %}
+            <li>
+                <p>{{ todo[1] }}</p>
+                <form method="POST" action="{{ url_for('update_status', todo_id=todo[0]) }}">
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="Not Started" {% if todo[2] == 'Not Started' %}selected{% endif %}>Not Started</option>
+                        <option value="Started" {% if todo[2] == 'Started' %}selected{% endif %}>Started</option>
+                        <option value="Done" {% if todo[2] == 'Done' %}selected{% endif %}>Done</option>
+                    </select>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+        <div>
+            <hr class="counter">
+            <div class="counter-container">
+                <p><span id="todoCount">{{ todos|length }}</span> items total</p>
+                <form method="POST" action="{{ url_for('delete') }}">
+                    <button id="deleteButton">Delete All</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
